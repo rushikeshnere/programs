@@ -1,0 +1,13 @@
+syntax="proto3";
+
+message ClientRequest{
+	string client_message = 1;
+}
+
+message ServerResponse{
+        string server_message = 1;
+}
+
+service ServerService{
+	rpc PingServer(ClientRequest) returns (ServerResponse) {};
+}
