@@ -38,6 +38,11 @@ func main(){
 		if(empID == -1) {
 			break;
 		}
+		if (doesEmployeeAlreadyExist(empID)) {
+			fmt.Println("Employee with this emp ID is already exists, please enter another emp ID")
+			continue
+		}	
+		
 		fmt.Println("Enter employee Name")
 		empName, _ := reader.ReadString('\n')
 
@@ -70,7 +75,7 @@ func main(){
                         break;
                 }
 		if(firstEmpID == 1 || secondEmpID == 1) {
-			fmt.Println("Closest common manager = %+v\n", *(empDirImpl.empDirectory[1]))
+			fmt.Printf("Closest common manager = %+v\n", *(empDirImpl.empDirectory[1]))
 			continue
 		}
 		closestCommonManagerID := empDirImpl.getClosestManager(firstEmpID, secondEmpID)
@@ -89,6 +94,16 @@ func addEmployee(id int, name string, managerID int) {
 		empDirImpl.managerEmpMap[managerID] = append(empDirImpl.managerEmpMap[managerID], &emp)		
 	}
 	empDirImpl.empDirectory[id] = &emp
+}
+
+//Returns true if employee for the given empID already exist
+func doesEmployeeAlreadyExist(id int) (bool) {
+	for k := range empDirImpl.empDirectory {
+		if (k == id) {
+			return true
+		}
+	}	
+	return false
 }
 
 //Returns closest common manager
