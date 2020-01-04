@@ -17,6 +17,7 @@ type EmployeeDirectory struct {
 }
 
 var empDirImpl EmployeeDirectory
+var ceoID int
 
 func main(){
 	empDirImpl = EmployeeDirectory{}
@@ -26,7 +27,7 @@ func main(){
 	var empID, managerID int = 0, 0
 	var firstEmpID, secondEmpID = 0, 0
 
-	fmt.Println("Enter employee details. After completion of entering employee details of all employees enter -1 as employee ID.")
+	fmt.Println("Enter employee details. While entering CEO details add managerID same as CEO's empID.`After completion of entering employee details of all employees enter -1 as employee ID to exit.")
 	reader := bufio.NewReader(os.Stdin)
 
 	for {	
@@ -54,7 +55,7 @@ func main(){
 		addEmployee(empID, empName, managerID)	
 	}
 
-	fmt.Println("Enter IDs of two employees whose closest common manager needs to be found. After completion of finding closest common manager enter -1 as employee ID.")
+	fmt.Println("Enter IDs of two employees whose closest common manager needs to be found. After completion of finding closest common manager enter -1 as employee ID to exit.")
 
 	for {
 		fmt.Println("Enter 1st employee ID")
@@ -74,8 +75,8 @@ func main(){
                 if(secondEmpID == -1) {
                         break;
                 }
-		if(firstEmpID == 1 || secondEmpID == 1) {
-			fmt.Printf("Closest common manager = %+v\n", *(empDirImpl.empDirectory[1]))
+		if(firstEmpID == ceoID || secondEmpID == ceoID) {
+			fmt.Printf("Closest common manager = %+v\n", *(empDirImpl.empDirectory[ceoID]))
 			continue
 		}
 		closestCommonManagerID := empDirImpl.getClosestManager(firstEmpID, secondEmpID)
@@ -87,9 +88,10 @@ func main(){
 //Adds employee to employee directory
 func addEmployee(id int, name string, managerID int) {
 	emp := Employee{id, name}
-	if(managerID == -1) {
+	if(id == managerID) {
 		fmt.Println("Is a CEO")
-		empDirImpl.managerEmpMap[id] = append(empDirImpl.managerEmpMap[id], &emp)
+		ceoID = id
+		//empDirImpl.managerEmpMap[id] = append(empDirImpl.managerEmpMap[id], &emp)
 	} else {
 		empDirImpl.managerEmpMap[managerID] = append(empDirImpl.managerEmpMap[managerID], &emp)		
 	}
@@ -117,6 +119,7 @@ func (empDir EmployeeDirectory) getClosestManager(id1 int, id2 int) (int) {
                         emp2Managers = append(emp2Managers,getManagers(id2)...)
                         for emp1MgrCounter = 0; emp1MgrCounter < len(emp1Managers); emp1MgrCounter ++ {
                                 emp1Managers = append(emp1Managers,getManagers(emp1Managers[emp1MgrCounter])...)
+				fmt.Println(emp1Managers)
                         }
 			for emp2MgrCounter = 0; emp2MgrCounter < len(emp2Managers); emp2MgrCounter ++ {
                                 emp2Managers = append(emp2Managers,getManagers(emp2Managers[emp2MgrCounter])...)
